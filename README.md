@@ -7,12 +7,13 @@ Instructions for the reviewer
 To run this code, it needs to:
 1 - Prepare Host environment outlined in "Requirements for running" section
 2 - Log in as either normal user or root - for this solution username 'localuser' has been created and used all along with sudo capability
-3 - Retrieve Vagrant file:
+3 - Retrieve Git repository file:
+  shell $ cd ~
   shell $ git clone git@github.com:gitfabi/sinatra-withAnsible.git
-4 - Setting environment variables
-  * Add localuser's private key to the ssh agent, if it's not already added
-    = Inspect the output of 'ssh-add -L' to see if added
-    = Please note that it's required to execute 'vagrant up', taking place in step 5, in the same shell you are running below
+4 - Add localuser's private key to the ssh agent, if it's not already added. 
+    * If the user has not its RSA key generated, please run 'ssh-keygen' and press Enter to accept default values
+    * Inspect the output of 'ssh-add -L' to see if added
+    * Please note that it's required to execute 'vagrant up', taking place in step 5, in the same shell you are running below
     shell $ eval `ssh-agent`
     shell $ ssh-add ~/.ssh/id_rsa
 
@@ -22,7 +23,7 @@ To run this code, it needs to:
 6 - To test the application running:
   shell $ lynx 192.168.100.101    
 
-7 - To repeat the build:
+7 - To repeat the build process:
     change directory to 'sinatra-withAnsible'
     shell $ vagrant destroy
     shell $ vagrant up
@@ -38,7 +39,7 @@ System Requirements - packages and their dependencies:
 - Host OS: CentOS 7.3
 
 - Installing Git
-  $ sudo yum install git
+  $ sudo yum -y install git
 
 - Desktop Virtualization using VirtualBox on CentOS 7.3
   To allow VirtualBox utilize hardware resources from the Host OS, it's needed to have CPU/MMU Virtualization enabled (Intel VT-x/AMD-V) in BIOS. 
@@ -61,7 +62,7 @@ System Requirements - packages and their dependencies:
   $ sudo rpm -Uvh https://releases.hashicorp.com/vagrant/1.9.7/vagrant_1.9.7_x86_64.rpm
 
 - Installing Ansible
-  $ sudo yum install ansible
+  $ sudo yum -y install ansible
 
 - Installing lynx
   $ sudo yum -y install lynx
