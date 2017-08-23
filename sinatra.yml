@@ -1,0 +1,86 @@
+--- # Ubuntu Guest OS sinatra application provisioning
+- hosts: fabisinatra
+  become: true
+  become_method: sudo
+  user: ubuntu
+  gather_facts: no
+  tasks:
+  - name: Installing Packages
+    apt: name={{item}} state=latest update_cache=yes
+    with_items:
+      - ruby
+      - git
+      - bundler
+
+  - name: Copy RSA Keys for Git Repo Access
+    copy: src=files/.ssh dest=~
+    become: false
+
+  - name: Setting RSA keys permissions
+    command: "{{ item }} chdir=/home/ubuntu/.ssh"
+    with_items:
+      - chmod 0644 id_rsa.pub
+      - chmod 0600 id_rsa 
+    become: false
+
+  - name: Setting Global Git user and email
+    command: git config --global user.name "localuser"
+    become: false
+
+  - name: Setting Global Git
+    command: git config --global user.email "localuser@localhost"
+    become: false
+
+  - name: Adding github key to known hosts
+    shell: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    become: false
+
+  - name: Cloning Github REA
+    shell: git clone git@github.com:rea-cruitment/simple-sinatra-app.git 
+    become: false
+
+
+  - name: Installing Sinatra App
+    command: "{{ item }} chdir=/home/ubuntu/simple-sinatra-app"
+    with_items:
+      - bundle install
+      - bundle exec rackup -D -p 80 -o 192.168.100.101
+
+  - name: Securing the App Server
+    lineinfile:
+      path: /etc/fstab
+      line: tmpfs /run/shm tmpfs defaults,noexec,nosuid 0 0
+    notify: remount
+
+  - name: Allow ssh login for specific users
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      line: AllowUsers ubuntu
+    notify: reload sshd
+
+  - name: Hiding system info
+    command: "{{ item  }}"
+    with_items:
+      - echo "*** Authorized use only ***" > sudo tee /etc/issue.net
+      - sed -i.bak 's/^#Banner/Banner/' /etc/ssh/sshd_config
+      - sed -i.bak '$s/^/#/' /etc/update-motd.d/00-header
+    notify: reload sshd
+
+  - name: Hardening the Network Layer
+    sysctl: name=net.ipv4.conf.all.accept_redirects value=0 state=present
+    notify: reload sysctl
+
+  - name: Enabling Host-based Firewalld
+    command: "{{ item }}"
+    with_items:
+      - apt-get -y install firewalld
+      - firewall-cmd --add-port=80/tcp
+
+  handlers:
+  - name: remount
+    command: mount -o remount -a
+  - name: reload sshd
+    systemd: name=sshd.service state=reloaded
+  - name: reload sysctl
+    command: sysctl --system >/dev/null 2>&1
+
