@@ -5,15 +5,27 @@ Instructions for the reviewer
 -----------------------------
 
 To run this code, it needs to:
-1 - Prepare Host environment outlined in "Requirements for running"
-2 - Log in as normal user or root - for this solution username 'localuser' has been created and used all along
+1 - Prepare Host environment outlined in "Requirements for running" section
+2 - Log in as either normal user or root - for this solution username 'localuser' has been created and used all along with sudo capability
 3 - Retrieve Vagrant file:
-  shell $ git clone git@github.com:gitfabi/sinatra.git
-4 - Deploy the Guest OS and provisioning: 
-  shell $ cd sinatra
+  shell $ git clone git@github.com:gitfabi/sinatra-withAnsible.git
+4 - Setting environment variables
+  * Add localuser's private key to the ssh agent, if it's not already added
+    = Inspect the output of 'ssh-add -L' to see if added
+    = Please note that it's required to execute 'vagrant up', taking place in step 5, in the same shell you are running below
+    shell $ eval `ssh-agent`
+    shell $ ssh-add ~/.ssh/id_rsa
+
+5 - Deploy the Guest OS and provisioning: 
+  shell $ cd sinatra-withAnsible
   shell $ vagrant up
-5 - To test the application running:
+6 - To test the application running:
   shell $ lynx 192.168.100.101    
+
+7 - To repeat the build:
+    change directory to 'sinatra-withAnsible'
+    shell $ vagrant destroy
+    shell $ vagrant up
 
 All provisioning tasks are taken care of within Vagrantfile, after guest OS creation.
 
@@ -48,6 +60,9 @@ System Requirements - packages and their dependencies:
 - Installing Vagrant
   $ sudo rpm -Uvh https://releases.hashicorp.com/vagrant/1.9.7/vagrant_1.9.7_x86_64.rpm
 
+- Installing Ansible
+  $ sudo yum install ansible
+
 - Installing lynx
   $ sudo yum -y install lynx
 
@@ -65,15 +80,13 @@ Explanation of assumptions and design choices
 
 - To secure the application server, 'firewalld' service has been used. Alternatively, IPTables can be used.
 
-- For the sake of simplicity and ease of deployment, SHELL provisioning is used instead of Ansible. Ansible provisioning needs a working Python package on the Guest OS. Few Ubuntu instances from Vagrant repository were tried to utilize Ansible provisioning. They had Python package pre-installed, but some random issues with OS deployment on the VirtualBox were encountered, which was against anti-fragility and ease of deployment criteria.
-
- It's possible, to have Python provisioned via SSH first, and then use Ansible afterwards. However, to keep the code as simple as possible, SSH provisioning is used.
-
-- Privat IP address of 192.168.100.101 is allocated for the guest machine. If this IP conflicts with your existing private IP settings, please substitue it with another IP in the Vagrantfile provided.
+- Privat IP address of 192.168.100.101 is allocated for the guest machine. If this IP conflicts with your existing private IP settings, please substitue it with another IP in the follwoing files:
+	Vagrantfile
+	ansible_hosts
+	sinatra.yml
 
 - To make deployment easier, codes for runnign application provided by REA is automatically retrieved from Git repositoy. To do so, localuser user's public and private key is copied in ~ubuntu/.ssh folder to skip SSH key import required by 'git clone' for the newly created user in the guest OS. Alternitavely, REA code can be retrieved in the Vagrant's shared folder to avoid sharing RSA key with the rest of the world!
 
-- Bundler package seemed to fail randomly to install from online Ubuntu repository - that's why '--fix-missing' switch appears in the code to get round the problem
 
 - To secure the application server below steps are taken:
   * Securing Shared memory
