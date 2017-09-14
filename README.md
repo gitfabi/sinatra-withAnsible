@@ -9,7 +9,7 @@ To run this code, it needs to:
 2 - Log in as either normal user or root - for this solution username 'localuser' has been created and used all along with sudo capability
 3 - Retrieve Git repository file:
   shell $ cd ~
-  shell $ git clone git@github.com:gitfabi/updated-with-Ansible.git
+  shell $ git clone git@github.com:gitfabi/sinatra-withAnsible.git
 
 4 - Deploy the Guest OS and provisioning: 
   shell $ cd sinatra-withAnsible
