@@ -9,21 +9,15 @@ To run this code, it needs to:
 2 - Log in as either normal user or root - for this solution username 'localuser' has been created and used all along with sudo capability
 3 - Retrieve Git repository file:
   shell $ cd ~
-  shell $ git clone git@github.com:gitfabi/sinatra-withAnsible.git
-4 - Add localuser's private key to the ssh agent, if it's not already added. 
-    * If the user has not its RSA key generated, please run 'ssh-keygen' and press Enter to accept default values
-    * Inspect the output of 'ssh-add -L' to see if added
-    * Please note that it's required to execute 'vagrant up', taking place in step 5, in the same shell you are running below
-    shell $ eval `ssh-agent`
-    shell $ ssh-add ~/.ssh/id_rsa
+  shell $ git clone git@github.com:gitfabi/updated-with-Ansible.git
 
-5 - Deploy the Guest OS and provisioning: 
+4 - Deploy the Guest OS and provisioning: 
   shell $ cd sinatra-withAnsible
   shell $ vagrant up
-6 - To test the application running:
+5 - To test the application running:
   shell $ lynx 192.168.100.101    
 
-7 - To repeat the build process:
+6 - To repeat the build process:
     change directory to 'sinatra-withAnsible'
     shell $ vagrant destroy
     shell $ vagrant up
