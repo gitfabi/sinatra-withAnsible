@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
   ###config.vm.provision "shell", path: "provision.sh"
 
 
-  config.vm.provision "shell", privileged: false, inline: "ssh-add -L >> ~/.ssh/authorized_keys"
+  ##FA##config.vm.provision "shell", privileged: false, inline: "ssh-add -L >> ~/.ssh/authorized_keys"
   config.vm.provision "shell", inline: "sudo apt-get -y install python python-apt"
 
 
