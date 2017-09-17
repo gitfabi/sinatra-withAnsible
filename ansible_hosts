@@ -1,2 +1,2 @@
-fabisinatra ansible_host=192.168.100.101 ansible_user=ubuntu
+fabisinatra ansible_host=192.168.100.102 ansible_user=ubuntu
 fabi

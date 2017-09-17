@@ -44,7 +44,7 @@
     command: "{{ item }} chdir=/home/ubuntu/simple-sinatra-app"
     with_items:
       - bundle install
-      - bundle exec rackup -D -p 80 -o 192.168.100.101
+      - bundle exec rackup -D -p 80 -o 192.168.100.102
 
   - name: Securing the App Server
     lineinfile:

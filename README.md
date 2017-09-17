@@ -15,7 +15,7 @@ To run this code, it needs to:
   shell $ cd sinatra-withAnsible
   shell $ vagrant up
 5 - To test the application running:
-  shell $ lynx 192.168.100.101    
+  shell $ lynx 192.168.100.102    
 
 6 - To repeat the build process:
     change directory to 'sinatra-withAnsible'
@@ -75,7 +75,7 @@ Explanation of assumptions and design choices
 
 - To secure the application server, 'firewalld' service has been used. Alternatively, IPTables can be used.
 
-- Privat IP address of 192.168.100.101 is allocated for the guest machine. If this IP conflicts with your existing private IP settings, please substitue it with another IP in the follwoing files:
+- Privat IP address of 192.168.100.102 is allocated for the guest machine. If this IP conflicts with your existing private IP settings, please substitue it with another IP in the follwoing files:
 	Vagrantfile
 	ansible_hosts
 	sinatra.yml
